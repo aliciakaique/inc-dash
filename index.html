@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Análise de Áreas de Lazer - Empreendimentos Imobiliários</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <h1>Análise de Áreas de Lazer em Empreendimentos Imobiliários</h1>
+            <p class="subtitle">Dashboard Interativa - Pesquisa 2020-2025</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Overview Section -->
+            <section class="section overview-section">
+                <h2>Visão Geral</h2>
+                <div class="metrics-grid">
+                    <div class="metric-card" style="background-color: var(--color-bg-1);">
+                        <div class="metric-value" id="totalDevelopments">9</div>
+                        <div class="metric-label">Empreendimentos Analisados</div>
+                    </div>
+                    <div class="metric-card" style="background-color: var(--color-bg-2);">
+                        <div class="metric-value" id="totalItems">122</div>
+                        <div class="metric-label">Itens de Lazer Totais</div>
+                    </div>
+                    <div class="metric-card" style="background-color: var(--color-bg-3);">
+                        <div class="metric-value" id="uniqueAmenities">50</div>
+                        <div class="metric-label">Tipos Únicos de Lazer</div>
+                    </div>
+                    <div class="metric-card" style="background-color: var(--color-bg-4);">
+                        <div class="metric-value" id="avgAmenities">13.6</div>
+                        <div class="metric-label">Média de Itens por Empreendimento</div>
+                    </div>
+                </div>
+                <div class="charts-row">
+                    <div class="chart-container">
+                        <h3>Empreendimentos por Ano</h3>
+                        <canvas id="yearChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Top 10 Itens de Lazer Mais Comuns</h3>
+                        <canvas id="topAmenitiesChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Filters Section -->
+            <section class="section filters-section">
+                <h2>Filtros de Análise</h2>
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label class="form-label" for="bedroomFilter">Tipo de Apartamento (Quartos)</label>
+                        <select id="bedroomFilter" class="form-control">
+                            <option value="all">Todos</option>
+                            <option value="ST/1Q">ST/1Q (Studio/1Q)</option>
+                            <option value="1-2Q">1-2Q (Compacto)</option>
+                            <option value="2Q">2Q (Compacto)</option>
+                            <option value="2-3Q">2-3Q (Médio)</option>
+                            <option value="3Q">3Q (Grande)</option>
+                            <option value="3-4Q">3-4Q (Grande)</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="form-label" for="audienceFilter">Público Alvo</label>
+                        <select id="audienceFilter" class="form-control">
+                            <option value="all">Todos</option>
+                            <option value="FAMÍLIA">Famílias</option>
+                            <option value="INVESTIDORES">Investidores</option>
+                            <option value="SOLTEIRO">Solteiros/Recém-casados</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="form-label" for="categoryFilter">Categoria de Lazer</label>
+                        <select id="categoryFilter" class="form-control">
+                            <option value="all">Todas</option>
+                            <option value="Bem-estar">Bem-estar</option>
+                            <option value="Social/Eventos">Social/Eventos</option>
+                            <option value="Infantil">Infantil</option>
+                            <option value="Serviços">Serviços</option>
+                            <option value="Trabalho">Trabalho</option>
+                            <option value="Mobilidade">Mobilidade</option>
+                            <option value="Aquático">Aquático</option>
+                            <option value="Entretenimento">Entretenimento</option>
+                            <option value="Esportes">Esportes</option>
+                            <option value="Pet">Pet</option>
+                            <option value="Bem-estar Extra">Bem-estar Extra</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <button class="btn btn--primary" id="resetFilters">Resetar Filtros</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analysis Results Section -->
+            <section class="section analysis-section">
+                <h2>Resultados da Análise</h2>
+                <div class="analysis-content">
+                    <div class="chart-container-large">
+                        <h3>Distribuição de Categorias de Lazer</h3>
+                        <canvas id="categoryDistributionChart"></canvas>
+                    </div>
+                    <div class="chart-container-large">
+                        <h3>Itens de Lazer por Tipo de Apartamento</h3>
+                        <canvas id="bedroomAmenitiesChart"></canvas>
+                    </div>
+                </div>
+                <div class="analysis-content">
+                    <div class="chart-container-large">
+                        <h3>Preferências por Público Alvo</h3>
+                        <canvas id="audiencePreferencesChart"></canvas>
+                    </div>
+                    <div class="stats-container">
+                        <h3>Estatísticas Filtradas</h3>
+                        <div id="filteredStats" class="filtered-stats">
+                            <p><strong>Empreendimentos correspondentes:</strong> <span id="matchingDevelopments">9</span></p>
+                            <p><strong>Total de itens:</strong> <span id="matchingItems">122</span></p>
+                            <p><strong>Média de itens:</strong> <span id="matchingAvg">13.6</span></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Developments Comparison Section -->
+            <section class="section comparison-section">
+                <h2>Comparação de Empreendimentos</h2>
+                <div class="comparison-controls">
+                    <div class="filter-group">
+                        <label class="form-label" for="compare1">Empreendimento 1</label>
+                        <select id="compare1" class="form-control"></select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="form-label" for="compare2">Empreendimento 2</label>
+                        <select id="compare2" class="form-control"></select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="form-label" for="compare3">Empreendimento 3</label>
+                        <select id="compare3" class="form-control"></select>
+                    </div>
+                </div>
+                <div id="comparisonResults" class="comparison-results"></div>
+            </section>
+
+            <!-- Individual Developments Section -->
+            <section class="section developments-section">
+                <h2>Perfis de Empreendimentos</h2>
+                <div class="developments-tabs">
+                    <div class="tabs-header" id="developmentTabs"></div>
+                    <div class="tabs-content" id="developmentContent"></div>
+                </div>
+            </section>
+
+            <!-- Detailed Table Section -->
+            <section class="section table-section">
+                <h2>Tabela Detalhada</h2>
+                <div class="table-controls">
+                    <button class="btn btn--secondary" id="exportTable">Exportar Dados (CSV)</button>
+                </div>
+                <div class="table-container">
+                    <table id="amenitiesTable" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Empreendimento</th>
+                                <th>Ano</th>
+                                <th>Quartos</th>
+                                <th>Público Alvo</th>
+                                <th>Status</th>
+                                <th>Qtd. Itens</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="dashboard-footer">
+            <p>Dashboard de Análise de Áreas de Lazer - Empreendimentos Imobiliários | Dados: 2020-2025</p>
+        </footer>
+    </div>
+
+    <!-- Modal for detailed amenities -->
+    <div id="amenitiesModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
